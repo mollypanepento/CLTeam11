@@ -1,15 +1,13 @@
 {
-  "name": "spotify-profile-demo",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "Spotify Authorization Code with PKCE flow example",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "start": "http-server --cors public"
   },
-  "devDependencies": {
-    "typescript": "~5.6.2",
-    "vite": "^6.0.5"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1"
   }
 }

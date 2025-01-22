@@ -15,5 +15,5 @@
     "noImplicitReturns": true,
     "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": ["src", "../auth/auth_pkce/public/script.ts", "../auth/auth_pkce/public/authCodeWithPkce.ts", "../auth/auth_pkce/public/types.d.ts"]
 }
