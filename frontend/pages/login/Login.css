@@ -1,0 +1,36 @@
+.LoginPage {
+    text-align:center;
+}
+
+#logo {
+    height:300px;
+    position: relative;
+    right: 22px;
+}
+
+h1 {
+    src: local('lineto-circular-black'), url(../../assets/fonts/lineto-circular-black.ttf) format('truetype');
+    font-family: lineto-circular-black;
+    color: #ffd200;
+    font-size: 64px;
+}
+
+h1 span {
+    color: #e21833
+}
+
+.description {
+    src: local('SpotifyMix-Regular'), url(../../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
+    font-family: SpotifyMix-Regular;
+    font-size: 18px
+}
+
+#loginButton {
+    src: local('SpotifyMix-Regular'), url(../../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
+    font-family: SpotifyMix-Regular; 
+    background-color: #1DB954;
+}
+
+#SpotifyLogo {
+    height:30px;
+}
