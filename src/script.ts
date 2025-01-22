@@ -4,7 +4,7 @@ const clientId = "1ce721f84142477b9efce55e0ed4bd5f"; // Replace with your client
 const params = new URLSearchParams(window.location.search); //prevents user from being stuck in a redirect loop when they authenticate
 const code = params.get("code");
 
-if (!code) {
+if (true) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);

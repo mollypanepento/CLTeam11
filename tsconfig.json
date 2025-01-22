@@ -15,5 +15,5 @@
     "noImplicitReturns": true,
     "skipLibCheck": true
   },
-  "include": ["src", "auth/main.ts", "auth/types.d.ts", "../authentication", "tsconfig.json", "auth/authCodeWithPkce.ts"]
+  "include": ["src"]
 }
