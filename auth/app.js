@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './database.env' }); // keep all this stuff in one env file that;s in the root directory
+//require('dotenv').config({ path: './database.env' }); // keep all this stuff in one env file that;s in the root directory
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const crypto = require('crypto');
 const http = require('http');
