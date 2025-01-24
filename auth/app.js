@@ -120,18 +120,17 @@ async function main() {
     await insertUserArtists(client, topArtists, currentToken.access_token);
     await insertUserTracks(client, topTracks, currentToken.access_token);
 
-    const overallTopTracks = await topOverallTracks(client, topTracks);
-    const overallTopArtists = await topOverallArtists(client, topArtists);
+    const overallTopTracks = await topOverallTracks(client, topTracks, 20);
+    const overallTopArtists = await topOverallArtists(client, topArtists, 20);
 
     console.log('Top Tracks:', overallTopTracks);
     console.log('Top Artists:', overallTopArtists);
 
-    const percentTracks = await compareTracksToOverall(client, currentToken.access_token, overallTopTracks);
-    const percentArtists = await compareArtistsToOverall(client, currentToken.access_token, overallTopArtists);
+    const percentTracks = await compareTracksToOverall(currentToken.access_token, overallTopTracks);
+    const percentArtists = await compareArtistsToOverall(currentToken.access_token, overallTopArtists);
 
-    // avg percent tracks & artists
-    const blend = getBlend(percentTracks, percentArtists);
-    console.log('Percent:', percent);
+    const similarity = getBlend(percentArtists, percentTracks);
+    console.log(similarity);
 
   } catch (err) {
     console.error(err);
@@ -140,39 +139,28 @@ async function main() {
   }
 }
 
-// returns array of uris
-async function topOverallTracks(client, topTracks) {
-  const pipeline = [
-    { $unwind: "$items" },
-    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
-    { $sort: { count: -1 } },
-    { $limit: 20 }
-  ];
-
-  const topTracksCursor = topTracks.aggregate(pipeline);
-  return await topTracksCursor.toArray();
-}
-
-// returns array of uris
-async function topOverallArtists(client, topArtists){
-  const pipeline = [
-    { $unwind: "$items" },
-    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
-    { $sort: { count: -1 } },
-    { $limit: 20 }
-  ];
-
-  const topArtistsCursor = topArtists.aggregate(pipeline);
-  return await topArtistsCursor.toArray();
-}
-
-async function insertUserTracks(client, topTracks, token) {
+async function fetchTracks(token) {
   const response = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=20", {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + token },
   });
 
-  const data = await response.json();
+  return await response.json();
+}
+
+async function fetchArtists(token) {
+  const response = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + token },
+  });
+
+  return await response.json();
+
+}
+
+async function insertUserTracks(client, topTracks, token) {
+  const data = fetchTracks(token);
+
   const userExists = await topTracks.findOne({ id: data.id });
   
   if (!userExists) {
@@ -182,12 +170,8 @@ async function insertUserTracks(client, topTracks, token) {
 }
 
 async function insertUserArtists(client, topArtists, token) {
-  const response = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
-    method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + token },
-  });
+  const data = fetchArtists(token);
 
-  const data = await response.json();
   const userExists = await topArtists.findOne({ id: data.id });
   
   if (!userExists) {
@@ -196,36 +180,54 @@ async function insertUserArtists(client, topArtists, token) {
   }
 }
 
-// return number out of 100
-async function compareTracksToOverall(client, token, ) {
-  // divide by 20
+// returns array of uris
+async function topOverallTracks(client, topTracks, limit) {
+  const pipeline = [
+    { $unwind: "$items" },
+    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: limit }
+  ];
+
+  const topTracksCursor = topTracks.aggregate(pipeline);
+  return await topTracksCursor.toArray();
+}
+
+// returns array of uris
+async function topOverallArtists(client, topArtists, limit){
+  const pipeline = [
+    { $unwind: "$items" },
+    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: limit }
+  ];
+
+  const topArtistsCursor = topArtists.aggregate(pipeline);
+  return await topArtistsCursor.toArray();
 }
 
 // return number out of 100
-async function compareArtistsToOverall(client, token, topArtists) {
-  const response = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
-    method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + token },
-  });
+async function compareTracksToOverall(token, overall) {
+  const data = fetchTracks(token);
 
-  const data = await response.json();
+  const userUris = data.items ? data.items.map(item => item.uri) : [];
+
+  return compareSimilarity(overall, userUris);
+}
+
+// return number out of 100
+async function compareArtistsToOverall(token, overall) {
+  const data = fetchArtists(token);
 
   // creates array of uris from current user
   const userUris = data.items ? data.items.map(item => item.uri) : [];
 
-  const compareArtistsCursor = topArtists.aggregate(pipeline);
-  const numMatching = await compareArtistsCursor.toArray().length;
-  
-  // divide by 20
-  
+  return compareSimilarity(overall, userUris);  
 }
 
 // returns the percent similarity between the school's top music and the user's 
-function getBlend(schoolArtists, schoolTracks, userArtists, userTracks){
-  const artistsPercent = compareSimilarity(schoolArtists, userArtists);
-  const tracksPercent = compareSimilarity(schoolTracks, userTracks);
-  
-  const percent = (artistsPercent + tracksPercent)/2;
+function getBlend(artistSimilarity, tracksSimilarity){
+  const percent = (artistSimilarity + tracksSimilarity)/2;
   return Math.floor(percent);
 }
 
@@ -239,7 +241,6 @@ function compareSimilarity(schoolList, userList){
 
   const similarity = (intersection.size / union.size) * 100;
   return similarity;
-
 }
 
 main().catch(console.error);
