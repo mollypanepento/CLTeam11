@@ -218,4 +218,26 @@ async function compareArtistsToOverall(client, token, topArtists) {
   
 }
 
+// returns the percent similarity between the school's top music and the user's 
+function getBlend(schoolArtists, schoolTracks, userArtists, userTracks){
+  const artistsPercent = compareSimilarity(schoolArtists, userArtists);
+  const tracksPercent = compareSimilarity(schoolTracks, userTracks);
+  
+  const percent = (artistsPercent + tracksPercent)/2;
+  return Math.floor(percent);
+}
+
+// returns the percent similarity of two lists 
+function compareSimilarity(schoolList, userList){
+  const schoolSet = new Set(schoolList);
+  const userSet = new Set(userList);
+
+  const intersection = new Set([...schoolSet].filter(x => userSet.has(x)));
+  const union = new Set([...schoolSet, ...userSet]);
+
+  const similarity = (intersection.size / union.size) * 100;
+  return similarity;
+
+}
+
 main().catch(console.error);
