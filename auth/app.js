@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './database.env' }); // keep all this stuff in one env file that;s in the root directory
+require('dotenv').config({ path: './database.env' });
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const crypto = require('crypto');
 const http = require('http');
@@ -129,6 +129,8 @@ async function main() {
     const percentTracks = await compareTracksToOverall(client, currentToken.access_token, overallTopTracks);
     const percentArtists = await compareArtistsToOverall(client, currentToken.access_token, overallTopArtists);
 
+    // avg percent tracks & artists
+
   } catch (err) {
     console.error(err);
   } finally {
@@ -142,7 +144,7 @@ async function topOverallTracks(client, topTracks) {
     { $unwind: "$items" },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
-    { $limit: 10 }
+    { $limit: 20 }
   ];
 
   const topTracksCursor = topTracks.aggregate(pipeline);
@@ -155,7 +157,7 @@ async function topOverallArtists(client, topArtists){
     { $unwind: "$items" },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
-    { $limit: 10 }
+    { $limit: 20 }
   ];
 
   const topArtistsCursor = topArtists.aggregate(pipeline);
@@ -194,7 +196,7 @@ async function insertUserArtists(client, topArtists, token) {
 
 // return number out of 100
 async function compareTracksToOverall(client, token, ) {
-  
+  // divide by 20
 }
 
 // return number out of 100
@@ -212,12 +214,13 @@ async function compareArtistsToOverall(client, token, overall) {
     { $unwind: "$items" },
     { $match: { "items.uri": { $in: userUris } } },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
-    { $match: { count: { $gt: 0 } } }
+    { $match: { count: { $gt: 1 } } }
   ];
 
   const compareArtistsCursor = data.aggregate(pipeline);
   const numMatching = await compareArtistsCursor.toArray().size();
   
+  // divide by 20
   
 }
 
