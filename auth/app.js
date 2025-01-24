@@ -129,6 +129,8 @@ async function main() {
     const percentTracks = await compareTracksToOverall(client, currentToken.access_token, overallTopTracks);
     const percentArtists = await compareArtistsToOverall(client, currentToken.access_token, overallTopArtists);
 
+    // avg percent tracks & artists
+
   } catch (err) {
     console.error(err);
   } finally {
@@ -212,12 +214,12 @@ async function compareArtistsToOverall(client, token, overall) {
     { $unwind: "$items" },
     { $match: { "items.uri": { $in: userUris } } },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
-    { $match: { count: { $gt: 0 } } }
+    { $match: { count: { $gt: 1 } } }
   ];
 
   const compareArtistsCursor = data.aggregate(pipeline);
   const numMatching = await compareArtistsCursor.toArray().size();
-  
+  //divide by 20
 }
 
 main().catch(console.error);
