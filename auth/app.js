@@ -8,7 +8,7 @@
  */
 
 const clientId = '1ce721f84142477b9efce55e0ed4bd5f'; // your clientId
-const redirectUrl = 'http://localhost:5173/callback';        // your redirect URL - must be localhost URL and/or HTTPS
+const redirectUrl = 'http://127.0.0.1:8080';        // your redirect URL - must be localhost URL and/or HTTPS
 
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
