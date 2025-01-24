@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './database.env' }); // keep all this stuff in one env file that;s in the root directory
+require('dotenv').config({ path: './database.env' });
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const crypto = require('crypto');
 const http = require('http');
@@ -144,7 +144,7 @@ async function topOverallTracks(client, topTracks) {
     { $unwind: "$items" },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
-    { $limit: 10 }
+    { $limit: 20 }
   ];
 
   const topTracksCursor = topTracks.aggregate(pipeline);
@@ -157,7 +157,7 @@ async function topOverallArtists(client, topArtists){
     { $unwind: "$items" },
     { $group: { _id: "$items.uri", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
-    { $limit: 10 }
+    { $limit: 20 }
   ];
 
   const topArtistsCursor = topArtists.aggregate(pipeline);
@@ -196,11 +196,11 @@ async function insertUserArtists(client, topArtists, token) {
 
 // return number out of 100
 async function compareTracksToOverall(client, token, ) {
-  
+  // divide by 20
 }
 
 // return number out of 100
-async function compareArtistsToOverall(client, token, overall) {
+async function compareArtistsToOverall(client, token, topArtists) {
   const response = await fetch("https://api.spotify.com/v1/me/top/artists?limit=20", {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + token },
@@ -209,17 +209,13 @@ async function compareArtistsToOverall(client, token, overall) {
   const data = await response.json();
 
   // creates array of uris from current user
-  const userUris = data.items.map(item => item.uri);
-  const pipeline = [
-    { $unwind: "$items" },
-    { $match: { "items.uri": { $in: userUris } } },
-    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
-    { $match: { count: { $gt: 1 } } }
-  ];
+  const userUris = data.items ? data.items.map(item => item.uri) : [];
 
-  const compareArtistsCursor = data.aggregate(pipeline);
-  const numMatching = await compareArtistsCursor.toArray().size();
-  //divide by 20
+  const compareArtistsCursor = topArtists.aggregate(pipeline);
+  const numMatching = await compareArtistsCursor.toArray().length;
+  
+  // divide by 20
+  
 }
 
 main().catch(console.error);
