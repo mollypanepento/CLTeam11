@@ -130,6 +130,8 @@ async function main() {
     const percentArtists = await compareArtistsToOverall(client, currentToken.access_token, overallTopArtists);
 
     // avg percent tracks & artists
+    const blend = getBlend(percentTracks, percentArtists);
+    console.log('Percent:', percent);
 
   } catch (err) {
     console.error(err);
