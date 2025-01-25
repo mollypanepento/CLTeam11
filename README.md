@@ -1,6 +1,16 @@
-# Terp Tunes
 
+<div align="center">
+  <a href="https://github.com/yashasvijay/Nutritional-Helper">
+    <img src="logo.png" alt="Logo" width="100" height="100">
+  </a>
+  <br />
+<a href="https://www.flaticon.com/free-icons/nutritionist" title="nutritionist icons">
+   
+  </a>
 
+<h3 align="center">Terp Tunes</h3>
+
+</div>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -16,10 +26,12 @@ Terp Tunes is a web app that displays shared music taste across campus communiti
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Contact
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: logo.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [JS.js]: https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E
