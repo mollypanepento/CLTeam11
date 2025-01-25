@@ -1,7 +1,7 @@
 
 <div align="center">
-  <a href="https://github.com/yashasvijay/Nutritional-Helper">
-    <img src="logo.png" alt="Logo" width="100" height="100">
+  <a href="https://github.com/mollypanepento/CLTeam11.git">
+    <img src="src/logo.png" alt="Logo" width="400" height="100">
   </a>
   <br />
 <a href="https://www.flaticon.com/free-icons/nutritionist" title="nutritionist icons">
