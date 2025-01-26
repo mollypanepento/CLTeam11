@@ -117,11 +117,11 @@ async function main() {
       refresh_token: 'your_refresh_token'
     });
 
-    await insertUserArtists(client, topArtists, currentToken.access_token);
-    await insertUserTracks(client, topTracks, currentToken.access_token);
+    await insertUserArtists(topArtists, currentToken.access_token);
+    await insertUserTracks(topTracks, currentToken.access_token);
 
-    const overallTopTracks = await topOverallTracks(client, topTracks, 20);
-    const overallTopArtists = await topOverallArtists(client, topArtists, 20);
+    const overallTopTracks = await topOverallTracks(topTracks, 20);
+    const overallTopArtists = await topOverallArtists(topArtists, 20);
 
     console.log('Top Tracks:', overallTopTracks);
     console.log('Top Artists:', overallTopArtists);
@@ -158,7 +158,7 @@ async function fetchArtists(token) {
 
 }
 
-async function insertUserTracks(client, topTracks, token) {
+async function insertUserTracks(topTracks, token) {
   const data = fetchTracks(token);
 
   const userExists = await topTracks.findOne({ id: data.id });
@@ -169,7 +169,7 @@ async function insertUserTracks(client, topTracks, token) {
   }
 }
 
-async function insertUserArtists(client, topArtists, token) {
+async function insertUserArtists(topArtists, token) {
   const data = fetchArtists(token);
 
   const userExists = await topArtists.findOne({ id: data.id });
@@ -181,7 +181,7 @@ async function insertUserArtists(client, topArtists, token) {
 }
 
 // returns array of ids
-async function topOverallTracks(client, topTracks, limit) {
+async function topOverallTracks(topTracks, limit) {
   const pipeline = [
     { $unwind: "$items" },
     { $group: { _id: "$items.id", count: { $sum: 1 } } },
@@ -194,7 +194,7 @@ async function topOverallTracks(client, topTracks, limit) {
 }
 
 // returns array of ids
-async function topOverallArtists(client, topArtists, limit){
+async function topOverallArtists(topArtists, limit){
   const pipeline = [
     { $unwind: "$items" },
     { $group: { _id: "$items.id", count: { $sum: 1 } } },
@@ -210,9 +210,9 @@ async function topOverallArtists(client, topArtists, limit){
 async function compareTracksToOverall(token, overall) {
   const data = fetchTracks(token);
 
-  const userUris = data.items ? data.items.map(item => item.uri) : [];
+  const userIDs = data.items ? data.items.map(item => item.id) : [];
 
-  return compareSimilarity(overall, userUris);
+  return compareSimilarity(overall, userIDs);
 }
 
 // return number out of 100
@@ -220,9 +220,9 @@ async function compareArtistsToOverall(token, overall) {
   const data = fetchArtists(token);
 
   // creates array of uris from current user
-  const userUris = data.items ? data.items.map(item => item.uri) : [];
+  const userIDs = data.items ? data.items.map(item => item.id) : [];
 
-  return compareSimilarity(overall, userUris);  
+  return compareSimilarity(overall, userIDs);  
 }
 
 // returns the percent similarity between the school's top music and the user's 
