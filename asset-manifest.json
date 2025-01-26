@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/terptunes/static/css/main.9bf08b40.css",
+    "main.js": "/terptunes/static/js/main.4f2a56ff.js",
+    "static/js/453.bdbd6be3.chunk.js": "/terptunes/static/js/453.bdbd6be3.chunk.js",
+    "static/media/lineto-circular-black.ttf": "/terptunes/static/media/lineto-circular-black.6433e67329bab418a126.ttf",
+    "static/media/SpotifyMix-Medium.ttf": "/terptunes/static/media/SpotifyMix-Medium.57c56cbf5a6e1ac660eb.ttf",
+    "static/media/lineto-circular-book.ttf": "/terptunes/static/media/lineto-circular-book.5ceef6bf70e91cd6e891.ttf",
+    "static/media/SpotifyMix-Regular.ttf": "/terptunes/static/media/SpotifyMix-Regular.421bf25f99718c731caa.ttf",
+    "static/media/TerpTunesLogo.png": "/terptunes/static/media/TerpTunesLogo.95e8a6fad8c9b7823936.png",
+    "static/media/LogoNoWords.png": "/terptunes/static/media/LogoNoWords.24ee397ae5070c5b6c68.png",
+    "static/media/logo.svg": "/terptunes/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/terptunes/index.html",
+    "main.9bf08b40.css.map": "/terptunes/static/css/main.9bf08b40.css.map",
+    "main.4f2a56ff.js.map": "/terptunes/static/js/main.4f2a56ff.js.map",
+    "453.bdbd6be3.chunk.js.map": "/terptunes/static/js/453.bdbd6be3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9bf08b40.css",
+    "static/js/main.4f2a56ff.js"
+  ]
+}
