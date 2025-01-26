@@ -180,11 +180,11 @@ async function insertUserArtists(client, topArtists, token) {
   }
 }
 
-// returns array of uris
+// returns array of ids
 async function topOverallTracks(client, topTracks, limit) {
   const pipeline = [
     { $unwind: "$items" },
-    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
+    { $group: { _id: "$items.id", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
     { $limit: limit }
   ];
@@ -193,11 +193,11 @@ async function topOverallTracks(client, topTracks, limit) {
   return await topTracksCursor.toArray();
 }
 
-// returns array of uris
+// returns array of ids
 async function topOverallArtists(client, topArtists, limit){
   const pipeline = [
     { $unwind: "$items" },
-    { $group: { _id: "$items.uri", count: { $sum: 1 } } },
+    { $group: { _id: "$items.id", count: { $sum: 1 } } },
     { $sort: { count: -1 } },
     { $limit: limit }
   ];
@@ -241,6 +241,25 @@ function compareSimilarity(schoolList, userList){
 
   const similarity = (intersection.size / union.size) * 100;
   return similarity;
+}
+
+// for use in frontend
+async function fetchArtistInfo(token, id) {
+  const response = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + token },
+  });
+
+  return await response.json();
+}
+
+async function fetchTrackInfo(token, id) {
+  const response = await fetch(`https://api.spotify.com/v1/tracks/${id}`, {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + token },
+  });
+
+  return await response.json();
 }
 
 main().catch(console.error);
