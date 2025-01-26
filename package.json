@@ -8,6 +8,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "http-server": "^14.1.1"
+    "dotenv": "^16.4.7",
+    "http-server": "^14.1.1",
+    "mongodb": "^6.12.0"
   }
 }
