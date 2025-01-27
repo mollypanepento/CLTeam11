@@ -3,7 +3,7 @@ img {
 }
 
 #logoutButton {
-    src: local('SpotifyMix-Regular'), url(../../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
+    src: local('SpotifyMix-Regular'), url(../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
     font-family: 'SpotifyMix-Regular';
     padding: 10px 20px;
     font-size: 18px;

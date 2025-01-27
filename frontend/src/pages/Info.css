@@ -1,16 +1,19 @@
 #info-form {
-    src: local('SpotifyMix-Regular'), url(../../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
+    src: local('SpotifyMix-Regular'), url(../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
     font-family: SpotifyMix-Regular;
     text-align: center;
     padding: 20px;
     min-height: 100vh;
 }
 
+
 .info-title {
     font-size: 40px;
     color: #333;
     margin-bottom: 30px;
     margin-top:15px;
+    src: local('lineto-circular-black'), url(../assets/fonts/lineto-circular-black.ttf) format('truetype');
+    font-family: lineto-circular-black;
 }
 
 form {

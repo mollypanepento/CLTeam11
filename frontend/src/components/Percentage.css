@@ -11,4 +11,6 @@
 
 .percent {
     font-size: 75px;
+    src: local('lineto-circular-black'), url(../assets/fonts/lineto-circular-black.ttf) format('truetype');
+    font-family: lineto-circular-black;
 }

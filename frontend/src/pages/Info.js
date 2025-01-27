@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import './Info.css'
-import Top from '../../components/top/Top';
+import Top from '../components/Top';
 
 function Info() {
     const [school, setSchool] = useState('');

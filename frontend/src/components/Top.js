@@ -1,5 +1,5 @@
 import React from 'react';
-import TerpTunesLogo from '../../assets/images/TerpTunesLogo.png';
+import TerpTunesLogo from '../assets/images/TerpTunesLogo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Top.css';
 

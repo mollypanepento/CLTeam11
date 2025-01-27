@@ -21,7 +21,7 @@
 }
 
 .card-title {
-    src: local('lineto-circular-black'), url(../../assets/fonts/lineto-circular-black.ttf) format('truetype');
+    src: local('lineto-circular-black'), url(../assets/fonts/lineto-circular-black.ttf) format('truetype');
     font-family: 'lineto-circular-black';
     font-size: 30px;
     margin-bottom: 15px;
@@ -29,7 +29,7 @@
 } 
 
 .artist-name {
-    src: local('SpotifyMix-Regular'), url(../../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
+    src: local('SpotifyMix-Regular'), url(../assets/fonts/SpotifyMix-Regular.ttf) format('truetype');
     font-family: 'SpotifyMix-Regular';
     font-size: 22px;
     color: #303030;

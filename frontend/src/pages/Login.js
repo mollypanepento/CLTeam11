@@ -1,6 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LogoNoWords from '../../assets/images/LogoNoWords.png';
+import LogoNoWords from '../assets/images/LogoNoWords.png';
 import './Login.css';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ function Login() {
         <div className='LoginPage'>
 
             <img src={LogoNoWords} id='logo' alt="TerpTunesLogo" />
-            <h1><span>Terp</span>Tunes</h1>
+            <h1 className='title'><span>Terp</span>Tunes</h1>
             <br></br>
             <p className='description'>Compare your music taste with the campus around you!</p>
             <br></br>

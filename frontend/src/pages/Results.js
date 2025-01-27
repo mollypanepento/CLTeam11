@@ -1,8 +1,8 @@
 import React from 'react'
-import Top from '../../components/top/Top';
-import TopAlbums from '../../components/albumList/TopAlbums';
-import TopArtists from '../../components/artistList/TopArtists';
-import Percentage from '../../components/percentage/Percentage';
+import Top from '../components/Top';
+import TopAlbums from '../components/TopAlbums';
+import TopArtists from '../components/TopArtists';
+import Percentage from '../components/Percentage';
 import './Results.css';
 
 
