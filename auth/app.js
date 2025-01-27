@@ -262,4 +262,44 @@ async function fetchTrackInfo(token, id) {
   return await response.json();
 }
 
+// ARTIST INFO
+// returns string array of the artist's name
+async function getArtistName(token, id) {
+  const artistData = await fetchArtistInfo(token, id);
+
+  return artistData.name;
+}
+
+// returns string array of the artist's picture in various sizes (most commonly, 640x, 300x, 160x)
+async function getArtistImages(token, id) {
+  const artistData = await fetchArtistInfo(token, id);
+
+  const images = artistData.images.map(image => images.url);
+  return images;
+}
+
+// TRACK INFO
+// returns title string
+async function getTrackTitle(token, id) {
+  const trackData = await fetchTrackInfo(token, id);
+
+  return trackData.title;
+}
+
+// returns string array of artist(s) names
+async function getTrackArtist(token, id) {
+  const trackData = await fetchTrackInfo(token, id);
+
+  const artistNames = trackData.artists.map(artist => artist.name);
+  return artistNames; 
+}
+
+// returns string array of urls in various sizes
+async function getTrackImages(token, id) {
+  const trackData = await fetchTrackInfo(token, id);
+
+  const images = trackData.images.map(image => images.url);
+  return images;
+}
+
 main().catch(console.error);
