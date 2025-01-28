@@ -1,7 +1,7 @@
 
 <div align="center">
   <a href="https://github.com/mollypanepento/CLTeam11.git">
-    <img src="src/logo.png" alt="Logo" width="400" height="100">
+    <img src="frontend/src/assets/images/TerpTunesLogo.png" alt="Logo" width="400" height="100">
   </a>
   <br />
 <a href="https://www.flaticon.com/free-icons/nutritionist" title="nutritionist icons">
@@ -23,6 +23,14 @@ Terp Tunes is a web app that displays shared music taste across campus communiti
 * [![Javascript][JS.js]][JS-url]
 * [![HTML][HTML.com]][HTML-url]
 * [![CSS3][CSS.com]][CSS-url]
+
+## Running the Application
+
+From a console shell:
+
+    $ npm start
+
+Then, open `http://localhost:3000` in a browser.
 
 ## Contact
 
