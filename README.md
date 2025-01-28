@@ -24,7 +24,7 @@ Terp Tunes is a web app that displays shared music taste across campus communiti
 * [![HTML][HTML.com]][HTML-url]
 * [![CSS3][CSS.com]][CSS-url]
 
-## Running the example
+## Running the Application
 
 From a console shell:
 
