@@ -1,18 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
-import Login from './pages/login/Login';
-import Info from './pages/userinfo/Info';
-import Results from './pages/results/Results';
-import Top from './components/top/Top';
+import Login from '../src/pages/Login';
+import Info from '../src/pages/Info';
+import Results from '../src/pages/Results';
+import Top from '../src/components/Top';
 import TerpTunesLogo from './assets/images/TerpTunesLogo.png';
-import TopAlbums from './components/albumList/TopAlbums';
+import TopAlbums from '../src/components/TopAlbums';
 import { Link,BrowserRouter, Routes, Route } from 'react-router-dom';
 
 
 function App() {
   return (
-    <>
+    
       <div>
         <BrowserRouter>
           <Routes>
@@ -24,17 +24,10 @@ function App() {
         </BrowserRouter>
 
       </div>
-      {/* /* <br />
-    <div>
-      <Login />
-    </div>
+     
 
-    <div>
-      <Info />
-    </div> */}
-    </>
   );
 }
 
 
-export default App;
+export default App
