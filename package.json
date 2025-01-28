@@ -1,0 +1,15 @@
+{
+    "name": "my-app",
+    "version": "1.0.0",
+    "description": "Spotify Authorization Code with PKCE flow example",
+    "scripts": {
+      "start": "http-server --cors public"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "dotenv": "^16.4.7",
+      "http-server": "^14.1.1",
+      "mongodb": "^6.12.0"
+    }
+  }

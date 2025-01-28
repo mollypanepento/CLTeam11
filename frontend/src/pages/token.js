@@ -1,11 +1,12 @@
 const clientId = '1ce721f84142477b9efce55e0ed4bd5f';
-const redirectUrl = 'http://localhost:3000';
+const redirectUrl = 'http://localhost:3000/Info';
+
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 const scope = 'user-read-private user-read-email';
 
 // Data structure that manages the current active token, caching it in localStorage
-const currentToken = {
+export const currentToken = {
   get access_token() { return localStorage.getItem('access_token') || null; },
   get refresh_token() { return localStorage.getItem('refresh_token') || null; },
   get expires_in() { return localStorage.getItem('refresh_in') || null },
@@ -22,6 +23,8 @@ const currentToken = {
     localStorage.setItem('expires', expiry);
   }
 };
+
+
 
 // On page load, try to fetch auth code from current browser search URL
 const args = new URLSearchParams(window.location.search);
@@ -83,7 +86,7 @@ async function redirectToSpotifyAuthorize() {
 }
 
 // Soptify API Calls
-async function getToken(code) {
+export async function getToken(code) {
   const code_verifier = localStorage.getItem('code_verifier');
 
   const response = await fetch(tokenEndpoint, {
@@ -103,7 +106,7 @@ async function getToken(code) {
   return await response.json();
 }
 
-async function refreshToken() {
+export async function refreshToken() {
   const response = await fetch(tokenEndpoint, {
     method: 'POST',
     headers: {
@@ -119,21 +122,55 @@ async function refreshToken() {
   return await response.json();
 }
 
-async function getUserData() {
-  const response = await fetch("https://api.spotify.com/v1/me", {
-    method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
-  });
+export async function getUserData() {
+  console.log("Starting getUserData");
+  const token = currentToken.access_token;
+  
+  if (!token) {
+    console.log("No token found");
+    throw new Error('No access token available');
+  }
 
-  return await response.json();
+  console.log("Token found:", token);
+  
+  try {
+    const response = await fetch("https://api.spotify.com/v1/me", {
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Data received:", data);
+    return data;
+  } catch (error) {
+    console.error('Error in getUserData:', error);
+    throw error;
+  }
 }
 
 // Click handlers
+
+/*export function loginWithSpotifyClick() {
+    const clientId = "your_spotify_client_id";
+    const redirectUri = "http://localhost:3000/redirect"; // Spotify redirect URI
+    const scopes = "user-read-private user-read-email"; // Add the required scopes
+  
+    const spotifyAuthUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=${encodeURIComponent(scopes)}`;
+  
+    // Redirect to Spotify for authentication
+    window.location.href = spotifyAuthUrl;
+  }*/
 async function loginWithSpotifyClick() {
     console.log("Button clicked!");
     const response = await redirectToSpotifyAuthorize();
-    const data = await response.json();
-    return data;
+    //const data = await response.json();
+    return response;
 }
 
 export { loginWithSpotifyClick };
