@@ -1,14 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { currentToken } from './token';
 import Top from '../components/Top';
 import TopAlbums from '../components/TopAlbums';
 import TopArtists from '../components/TopArtists';
 import Percentage from '../components/Percentage';
 import './Results.css';
 
-
 function Results() {
-    return (
-        <div>
+  const [userData, setUserData] = useState(null);
+
+  // Fetch user data from the backend API
+  useEffect(() => {
+    fetch('http://localhost:3000/api/user-data')
+      .then((response) => response.json())
+      .then((data) => setUserData(data))
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
+
+  return (
+    <div>
             <Top />
             <br></br>
             <Percentage />
@@ -23,7 +35,7 @@ function Results() {
             <TopArtists />
 
         </div>
-    )
+  );
 }
 
 export default Results;

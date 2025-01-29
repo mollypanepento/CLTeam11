@@ -5,22 +5,34 @@ const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
 const scope = 'user-read-private user-read-email';
 
+
 // Data structure that manages the current active token, caching it in localStorage
 export const currentToken = {
   get access_token() { return localStorage.getItem('access_token') || null; },
   get refresh_token() { return localStorage.getItem('refresh_token') || null; },
-  get expires_in() { return localStorage.getItem('refresh_in') || null },
+  get expires_in() { return localStorage.getItem('expires_in') || null },
   get expires() { return localStorage.getItem('expires') || null },
 
   save: function (response) {
     const { access_token, refresh_token, expires_in } = response;
     localStorage.setItem('access_token', access_token);
-    localStorage.setItem('refresh_token', refresh_token);
+    // Only update refresh token if one is provided
+    if (refresh_token) {
+      localStorage.setItem('refresh_token', refresh_token);
+    }
     localStorage.setItem('expires_in', expires_in);
 
     const now = new Date();
     const expiry = new Date(now.getTime() + (expires_in * 1000));
     localStorage.setItem('expires', expiry);
+  },
+
+  clear: function() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('expires_in');
+    localStorage.removeItem('expires');
+    localStorage.removeItem('code_verifier');
   }
 };
 
@@ -107,32 +119,90 @@ export async function getToken(code) {
 }
 
 export async function refreshToken() {
-  const response = await fetch(tokenEndpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      client_id: clientId,
-      grant_type: 'refresh_token',
-      refresh_token: currentToken.refresh_token
-    }),
-  });
+  console.log("Attempting to refresh token...");
 
-  return await response.json();
+  const refresh_token = currentToken.refresh_token;
+  console.log("Stored Refresh Token:", refresh_token);
+
+  if (!refresh_token) {
+    console.error("No refresh token found. User must log in again.");
+    currentToken.clear();
+    throw new Error("NO_REFRESH_TOKEN");
+  }
+
+  try {
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        client_id: clientId,
+        grant_type: "refresh_token",
+        refresh_token: refresh_token,
+      }),
+    });
+
+    const responseText = await response.text();
+    console.log("Refresh token response:", responseText);
+
+    if (!response.ok) {
+      const errorData = JSON.parse(responseText);
+      
+      // Handle specific Spotify error cases
+      if (errorData.error === 'invalid_grant') {
+        console.error("Refresh token has been revoked or is invalid");
+        currentToken.clear();
+        throw new Error("REFRESH_TOKEN_REVOKED");
+      }
+      
+      throw new Error(`Failed to refresh token: ${response.status} - ${responseText}`);
+    }
+
+    const data = JSON.parse(responseText);
+    console.log("New access token received:", data);
+
+    currentToken.save(data);
+    return data.access_token;
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    
+    // If it's not one of our special errors, clear tokens as well
+    if (error.message !== "NO_REFRESH_TOKEN" && error.message !== "REFRESH_TOKEN_REVOKED") {
+      currentToken.clear();
+    }
+    
+    throw error;
+  }
 }
 
 export async function getUserData() {
   console.log("Starting getUserData");
-  const token = currentToken.access_token;
-  
-  if (!token) {
-    console.log("No token found");
-    throw new Error('No access token available');
+
+  let token = currentToken.access_token;
+  const expiry = new Date(currentToken.expires); 
+  const now = new Date();
+
+  console.log("Current Token:", token);
+  console.log("Token Expiry Time:", expiry);
+  console.log("Current Time:", now);
+
+  // Check if token is expired
+  if (!token || expiry <= now) {
+    console.log("Token expired. Attempting to refresh...");
+    try {
+      token = await refreshToken();
+    } catch (error) {
+      if (error.message === "REFRESH_TOKEN_REVOKED" || error.message === "NO_REFRESH_TOKEN") {
+        console.error("Token refresh failed. User needs to log in again.");
+        // Redirect to login page
+        window.location.href = '/login';  // Adjust this path as needed
+        return null;
+      }
+      throw new Error("Access token expired and refresh failed");
+    }
   }
 
-  console.log("Token found:", token);
-  
   try {
     const response = await fetch("https://api.spotify.com/v1/me", {
       method: 'GET',
@@ -140,6 +210,17 @@ export async function getUserData() {
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        // Token might have just expired, try one refresh
+        try {
+          token = await refreshToken();
+          return getUserData(); // Retry with new token
+        } catch (error) {
+          currentToken.clear();
+          window.location.href = '/login';
+          return null;
+        }
+      }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -147,10 +228,11 @@ export async function getUserData() {
     console.log("Data received:", data);
     return data;
   } catch (error) {
-    console.error('Error in getUserData:', error);
+    console.error("Error in getUserData:", error);
     throw error;
   }
 }
+
 
 // Click handlers
 
@@ -186,37 +268,3 @@ async function refreshTokenClick() {
   //renderTemplate("oauth", "oauth-template", currentToken);
 }
 
-// HTML Template Rendering with basic data binding - demoware only.
-/*function renderTemplate(targetId, templateId, data = null) {
-  const template = document.getElementById(templateId);
-  if (!template || !template.content) {
-    throw new Error("Template or content is null or undefined.");
-  }
-  const clone = template.content.cloneNode(true);
-
-  const elements = clone.querySelectorAll("*");
-  elements.forEach(ele => {
-    const bindingAttrs = [...ele.attributes].filter(a => a.name.startsWith("data-bind"));
-
-    bindingAttrs.forEach(attr => {
-      const target = attr.name.replace(/data-bind-/, "").replace(/data-bind/, "");
-      const targetType = target.startsWith("onclick") ? "HANDLER" : "PROPERTY";
-      const targetProp = target === "" ? "innerHTML" : target;
-
-      const prefix = targetType === "PROPERTY" ? "data." : "";
-      const expression = prefix + attr.value.replace(/;\n\r\n/g, "");
-
-      // Maybe use a framework with more validation here ;)
-      try {
-        ele[targetProp] = targetType === "PROPERTY" ? eval(expression) : () => { eval(expression) };
-        ele.removeAttribute(attr.name);
-      } catch (ex) {
-        console.error(`Error binding ${expression} to ${targetProp}`, ex);
-      }
-    });
-  });
-
-  const target = document.getElementById(targetId);
-  target.innerHTML = "";
-  target.appendChild(clone);
-}*/

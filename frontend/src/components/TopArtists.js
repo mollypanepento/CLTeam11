@@ -1,5 +1,5 @@
 import React from 'react';
-import ArtistCard from './ArtistCard';
+import ArtistCard from './ArtistCard.js';
 import './TopArtists.css';
 
 const one = (

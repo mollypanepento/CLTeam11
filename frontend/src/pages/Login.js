@@ -38,7 +38,6 @@ const Login = () => {
       handleLogin();
     }, []);
   
-    if (isLoggedIn && userData) {
         return (
             <div className="LoginPage">
               <img src={LogoNoWords} id="logo" alt="TerpTunesLogo" />
@@ -50,7 +49,7 @@ const Login = () => {
                 Compare your music taste with the campus around you!
               </p>
               <br />
-              <a
+              <button
                 className="btn btn-primary"
                 id="loginButton"
                 onClick={loginWithSpotifyClick}
@@ -61,12 +60,12 @@ const Login = () => {
                   src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/spotify-white-icon.png"
                   alt="Spotify"
                 />
-              </a>
+              </button>
+              
               <br />
               <Link to="/Info">Link to info page</Link>
             </div>
           );
-    }
   
     
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import TrackCard from './TrackCard';
+import TrackCard from './TrackCard.js';
 import './TopAlbums.css';
 //use props!
 
