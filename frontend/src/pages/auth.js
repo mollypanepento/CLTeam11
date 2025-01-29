@@ -87,12 +87,26 @@ async function fetchArtists(token) {
 
 }
 
+// returns string holding user's username
+async function getUsername(token) {
+  const response = await fetch("https://api.spotify.com/v1/me", {
+    method: 'GET',
+    headers: { 'Authorization': 'Bearer ' + token },
+  });
+
+  const data = response.json();
+
+  return data.id;
+}
+
 async function insertUserTracks(topTracks, token) {
   const data = fetchTracks(token);
 
-  const userExists = await topTracks.findOne({ id: data.id });
+  const userExists = await topTracks.findOne({ username: data.username });
   
   if (!userExists) {
+    const username = getUsername(token);
+    data.username = username;
     await topTracks.insertOne(data);
     console.log("Inserted new tracks data");
   }
@@ -101,9 +115,11 @@ async function insertUserTracks(topTracks, token) {
 async function insertUserArtists(topArtists, token) {
   const data = fetchArtists(token);
 
-  const userExists = await topArtists.findOne({ id: data.id });
+  const userExists = await topArtists.findOne({ username: data.username });
   
   if (!userExists) {
+    const username = getUsername(token);
+    data.username = username;
     await topArtists.insertOne(data);
     console.log("Inserted new artists data");
   }
