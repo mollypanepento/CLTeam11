@@ -1,7 +1,6 @@
 require('dotenv').config({ path: './database.env' });
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const crypto = require('crypto');
-const http = require('http');
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const redirectUrl = 'http://localhost:5173/callback';
