@@ -32,8 +32,6 @@ From a console shell:
 
 Then, open `http://localhost:3000` in a browser.
 
-## Contact
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
